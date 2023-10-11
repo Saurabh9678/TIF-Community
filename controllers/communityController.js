@@ -188,8 +188,7 @@ exports.getMemberCommunity = async (req, res, next) => {
     const roleId = await getRoleId("Community Admin");
 
     const memberedCommunities = await Member.find({
-      user: userId,
-      $and: [{ role: { $ne: roleId } }],
+      $and: [{ user: userId }, { role: { $ne: roleId } }],
     })
       .skip(skip)
       .limit(limit)
