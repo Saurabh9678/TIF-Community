@@ -10,7 +10,7 @@ exports.createRole = async (req, res, next) => {
     const tempName = name.toLowerCase();
     const scopes = getScopes(tempName);
     const role = await Role.create({
-      id,
+      _id:id,
       name,
       scopes,
     });
@@ -19,7 +19,7 @@ exports.createRole = async (req, res, next) => {
       status: true,
       content: {
         data: {
-          id: role.id,
+          _id: role._id,
           name: role.name,
           created_at: role.created_at,
           updated_at: role.updated_at,
@@ -46,7 +46,7 @@ exports.getAllRoles = async (req, res, next) => {
     const role = await Role.find()
       .skip(skip)
       .limit(limit)
-      .select("id name created_at updated_at -_id")
+      .select("name created_at updated_at")
       .exec();
 
     return res.status(200).json({

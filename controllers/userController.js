@@ -9,7 +9,7 @@ exports.registerUser = async (req, res, next) => {
   try {
     const id = Snowflake.generate();
     const user = await User.create({
-      id,
+      _id:id,
       name,
       email,
       password,
@@ -82,13 +82,13 @@ exports.logoutUser = async (req, res, next) => {
 };
 
 exports.getUserDetails = async (req, res, next) => {
-  const { id, name, email, created_at } = req.user;
+  const { _id, name, email, created_at } = req.user;
   try {
     return res.status(200).json({
       status: true,
       content: {
         data: {
-          id,
+          _id:_id,
           name,
           email,
           created_at,

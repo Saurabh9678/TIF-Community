@@ -18,7 +18,7 @@ const sendToken = (user, statusCode, res) => {
       status: true,
       content: {
         data: {
-          id: user.id,
+          _id: user._id,
           name: user.name,
           email: user.email,
           created_at: user.created_at,

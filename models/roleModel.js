@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 
 const roleSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
+  _id:{
+    type:String
   },
   name: {
     type: String,

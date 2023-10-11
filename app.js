@@ -21,10 +21,12 @@ app.use(function (req, res, next) {
 //Route Imports
 const userRoutes = require("./routes/userRoutes");
 const roleRoutes = require("./routes/roleRoutes");
+const communityRoutes = require("./routes/communityRoutes");
 
 //Routes
 app.use("/v1/auth", userRoutes);
 app.use("/v1/role", roleRoutes);
+app.use("/v1/community", communityRoutes);
 
 // MiddleWare for Error
 
