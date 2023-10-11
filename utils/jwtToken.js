@@ -11,11 +11,23 @@ const sendToken = (user, statusCode, res) => {
     httpOnly: true,
   };
 
-  res.status(statusCode).cookie("token", token, options).json({
-    success: true,
-    id: user._id,
-    token,
-  });
+  res
+    .status(statusCode)
+    .cookie("token", token, options)
+    .json({
+      status: true,
+      content: {
+        data: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          created_at: user.created_at,
+        },
+        meta: {
+          access_token: token,
+        },
+      },
+    });
 };
 
 module.exports = sendToken;

@@ -1,28 +1,27 @@
 const express = require("express");
 
-const {
-  loginUser,
-  registerUser,
-  logoutUser,
-  getUserDetail,
-  getUserDetailsPostman,
-  updateUserDetail,
-  getAllUsersDetailsPostman,
-} = require("../controllers/userController");
-
 const { isAuthenticatedUser } = require("../middleware/auth");
+const {
+  registerUser,
+  loginUser,
+  logoutUser,
+  getUserDetails
+} = require("../controllers/userController");
+const { ValidateUser } = require("../validations/userValidations");
 
-
-
-
+const { throwError } = require("../utils/helper");
 
 const router = express.Router();
 
-router.route("/register").post(registerUser);
+router
+  .route("/auth/signup")
+  .post(ValidateUser("signupUser"), throwError, registerUser);
+router
+  .route("/auth/signin")
+  .post(ValidateUser("signinUser"), throwError, loginUser);
 
-router.route("/login").post(loginUser);
+router.route("/auth/signout").get(isAuthenticatedUser, logoutUser);
 
-router.route("/logout").get(isAuthenticatedUser, logoutUser);
-
+router.route("/auth/me").get(isAuthenticatedUser, getUserDetails)
 
 module.exports = router;

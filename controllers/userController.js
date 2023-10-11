@@ -1,48 +1,75 @@
 const ErrorHandler = require("../utils/errorhandler");
-const catchAsyncError = require("../middleware/catchAsyncError");
+const { Snowflake } = require("@theinternetfolks/snowflake");
 const User = require("../models/userModel");
 const sendToken = require("../utils/jwtToken");
 
 // Register a User
-exports.registerUser = catchAsyncError(async (req, res, next) => {
+exports.registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
+  try {
+    const id = Snowflake.generate();
+    const user = await User.create({
+      id,
+      name,
+      email,
+      password,
+    });
 
-  const user = await User.create({
-    name,
-    email,
-    password,
-  });
-
-  sendToken(user, 201, res);
-});
+    sendToken(user, 201, res);
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      error: String(error),
+    });
+  }
+};
 
 // Login User
-exports.loginUser = catchAsyncError(async (req, res, next) => {
+exports.loginUser = async (req, res, next) => {
   const { email, password } = req.body;
 
-  // checking if user has given password and email both
+  try {
+    const user = await User.findOne({ email }).select("+password");
 
-  if (!email || !password) {
-    return next(new ErrorHandler("Please Enter Email & Password", 400));
+    if (!user) {
+      return res.status(401).json({
+        status: false,
+        errors: [
+          {
+            param: "email",
+            message: "The credentials you provided are invalid.",
+            code: "INVALID_CREDENTIALS",
+          },
+        ],
+      });
+    }
+
+    const isPasswordMatched = await user.comparePassword(password);
+
+    if (!isPasswordMatched) {
+      return res.status(401).json({
+        status: false,
+        errors: [
+          {
+            param: "password",
+            message: "The credentials you provided are invalid.",
+            code: "INVALID_CREDENTIALS",
+          },
+        ],
+      });
+    }
+
+    sendToken(user, 200, res);
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      error: String(error),
+    });
   }
-
-  const user = await User.findOne({ email }).select("+password");
-
-  if (!user) {
-    return next(new ErrorHandler("Invalid email or password", 401));
-  }
-
-  const isPasswordMatched = await user.comparePassword(password);
-
-  if (!isPasswordMatched) {
-    return next(new ErrorHandler("Invalid email or password", 401));
-  }
-
-  sendToken(user, 200, res);
-});
+};
 
 // Logout User
-exports.logoutUser = catchAsyncError(async (req, res, next) => {
+exports.logoutUser = async (req, res, next) => {
   res.cookie("token", null, {
     expires: new Date(Date.now()),
     httpOnly: true,
@@ -51,92 +78,27 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Logged Out",
-    error: "",
   });
-});
+};
 
-//Get user Detail --Profile
-exports.getUserDetail = catchAsyncError(async (req, res, next) => {
-  const user = await User.findById(req.params.u_id);
-  if (!user) {
-    return next(new ErrorHandler("No user found(Invalid userID)", 404));
+exports.getUserDetails = async (req, res, next) => {
+  const { id, name, email, created_at } = req.user;
+  try {
+    return res.status(200).json({
+      status: true,
+      content: {
+        data: {
+          id,
+          name,
+          email,
+          created_at,
+        },
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      error: String(error),
+    });
   }
-
-  res.status(200).json({
-    success: true,
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      dob: user.dob,
-      blood_group: user.blood_group,
-      phone_number: user.phone_number,
-      gender: user.gender,
-      address: user.address,
-    },
-    message: "Success",
-    error: "",
-  });
-});
-
-//update profile
-exports.updateUserDetail = catchAsyncError(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.u_id, req.body, {
-    new: true,
-    runValidators: true,
-    useFindAndModify: false,
-  });
-
-  res.status(200).json({
-    success: true,
-    user: {
-      id: user._id,
-      name: user.name,
-      dob: user.dob,
-      blood_group: user.blood_group,
-      gender: user.gender,
-      address: user.address,
-      phone_number: user.phone_number,
-    },
-    message: "Updated",
-    error: "",
-  });
-});
-
-// FOR Postman
-//get user detail
-exports.getUserDetailsPostman = catchAsyncError(async (req, res, next) => {
-  const user = await User.findById(req.params.u_id);
-  if (!user) {
-    return next(new ErrorHandler("Please provide a valid user Id", 404));
-  }
-
-  res.status(200).json({
-    success: true,
-    user: user,
-    message: "Success",
-    error: "",
-  });
-});
-
-//Get all users
-exports.getAllUsersDetailsPostman = catchAsyncError(async (req, res, next) => {
-  const users = await User.find(
-    {},
-    {
-      _id: 1,
-      name: 1,
-    }
-  );
-  if (!users) {
-    return next(new ErrorHandler("No users found", 404));
-  }
-
-  res.status(200).json({
-    success: true,
-    users_count: users.length,
-    users,
-    message: "Successful",
-    error: "",
-  });
-});
+};
