@@ -1,6 +1,5 @@
 const { validationResult } = require("express-validator");
 
-
 const throwError = (req, res, next) => {
   const errors = validationResult(req);
 
@@ -17,6 +16,13 @@ const throwError = (req, res, next) => {
   }
 };
 
+const getScopes = (name) => {
+  if (name.includes("admin")) return ["admin", "moderator", "member"];
+  else if (name.includes("moderator")) return ["moderator", "member"];
+  else return ["member"];
+};
+
 module.exports = {
-  throwError
+  throwError,
+  getScopes
 };
