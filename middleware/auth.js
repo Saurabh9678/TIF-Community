@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const {err_Code,env} = require("../utils/constants")
 
 // exports.isAuthenticatedUser = async (req, res, next) => {
 //   const headerToken = req.headers.authorization
@@ -38,13 +39,13 @@ exports.isAuthenticatedUser = async (req, res, next) => {
       errors: [
         {
           message: "You need to sign in to proceed.",
-          code: "NOT_SIGNEDIN",
+          code: err_Code.NOT_SIGNEDIN,
         },
       ],
     });
 
   try {
-    const decodedData = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedData = jwt.verify(token, env.JWT_SECRET);
     
     req.user = await User.findById(decodedData.id);
     next();

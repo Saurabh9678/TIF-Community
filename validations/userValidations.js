@@ -1,5 +1,6 @@
 const { body } = require("express-validator");
 const User = require("../models/userModel");
+const {err_Code} = require("../utils/constants")
 
 exports.ValidateUser = (reqType) => {
   switch (reqType) {
@@ -9,21 +10,21 @@ exports.ValidateUser = (reqType) => {
           .isLength({ min: 2 })
           .withMessage({
             message: "Name must be at least 2 characters long",
-            code: "INVALID_INPUT",
+            code: err_Code.INVALID_INPUT,
           })
           .bail(),
         body("email")
           .notEmpty()
           .withMessage({
             message: "Please enter email",
-            code: "INVALID_INPUT",
+            code: err_Code.INVALID_INPUT,
           })
           .bail()
           .toLowerCase()
           .isEmail()
           .withMessage({
             message: "Please provide a valid email address.",
-            code: "INVALID_INPUT",
+            code: err_Code.INVALID_INPUT,
           })
           .bail()
           .custom(async (value) => {
@@ -31,7 +32,7 @@ exports.ValidateUser = (reqType) => {
               if (user) {
                 return Promise.reject({
                   message: "User with this email address already exists.",
-                  code: "RESOURCE_EXISTS",
+                  code: err_Code.RESOURCE_EXISTS,
                 });
               }
             });
@@ -40,14 +41,14 @@ exports.ValidateUser = (reqType) => {
           .isLength({ min: 2 })
           .withMessage({
             message: "Password should be at least 2 characters.",
-            code: "INVALID_INPUT",
+            code: err_Code.INVALID_INPUT,
           })
           .bail()
           .custom((value) => {
             if (!/[a-z]/.test(value) || !/[A-Z]/.test(value)) {
               return Promise.reject({
                 message: "Password should be at least 2 characters.",
-                code: "INVALID_INPUT",
+                code: err_Code.INVALID_INPUT,
               });
             }
             return true;
@@ -61,21 +62,21 @@ exports.ValidateUser = (reqType) => {
           .notEmpty()
           .withMessage({
             message: "Please enter email",
-            code: "INVALID_INPUT",
+            code: err_Code.INVALID_INPUT,
           })
           .bail()
           .toLowerCase()
           .isEmail()
           .withMessage({
             message: "Please provide a valid email address.",
-            code: "INVALID_INPUT",
+            code: err_Code.INVALID_INPUT,
           })
           .bail(),
         body("password")
           .notEmpty()
           .withMessage({
             message: "Please enter password",
-            code: "INVALID_INPUT",
+            code: err_Code.INVALID_INPUT,
           })
           .bail(),
       ];

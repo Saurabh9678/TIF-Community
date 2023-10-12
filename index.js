@@ -1,5 +1,5 @@
 const app = require("./app");
-const dotenv = require("dotenv");
+const { env } = require("./utils/constants");
 
 const connectDataBase = require("./database/database.js");
 
@@ -10,17 +10,16 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-//Config
-dotenv.config({ path: "database/config.env" });
-
 //Connecting to database
 connectDataBase();
+
+
 
 app.get("/", (req, res) => {
   res.status(200).json({ meesage: "hello world" });
 });
-const server = app.listen(4000, () => {
-  console.log(`Server is running in http://localhost:${process.env.PORT}`);
+const server = app.listen(env.PORT, () => {
+  console.log(`Server is running`);
 });
 
 //Unhandled Promise rejections

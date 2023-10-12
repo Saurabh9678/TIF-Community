@@ -1,4 +1,6 @@
 const { body } = require("express-validator");
+const {err_Code} = require("../utils/constants")
+
 
 
 exports.ValidateCommunity = (reqType) => {
@@ -9,7 +11,7 @@ exports.ValidateCommunity = (reqType) => {
           .isLength({ min: 2 })
           .withMessage({
             message: "Name must be at least 2 characters long",
-            code: "INVALID_INPUT",
+            code: err_Code.INVALID_INPUT,
           })
           .bail(),
       ];

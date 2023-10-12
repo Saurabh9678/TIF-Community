@@ -3,7 +3,7 @@ const Community = require("../models/communityModel");
 const Member = require("../models/memberModel");
 const Role = require("../models/roleModel");
 const { getRoleId } = require("../utils/helper");
-
+const {err_Code} = require("../utils/constants")
 // Add member
 exports.addMember = async (req, res, next) => {
   const { community, user, role } = req.body;
@@ -20,7 +20,7 @@ exports.addMember = async (req, res, next) => {
         errors: [
           {
             message: "You are not authorized to perform this action.",
-            code: "NOT_ALLOWED_ACCESS",
+            code: err_Code.NOT_ALLOWED_ACCESS,
           },
         ],
       });
@@ -35,7 +35,7 @@ exports.addMember = async (req, res, next) => {
         errors: [
           {
             message: "User is already added in the community.",
-            code: "RESOURCE_EXISTS",
+            code: err_Code.RESOURCE_EXISTS,
           },
         ],
       });
@@ -83,7 +83,7 @@ exports.deleteMember = async (req, res, next) => {
         errors: [
           {
             message: "Member not found.",
-            code: "RESOURCE_NOT_FOUND",
+            code: err_Code.RESOURCE_NOT_FOUND,
           },
         ],
       });
@@ -104,7 +104,7 @@ exports.deleteMember = async (req, res, next) => {
           errors: [
             {
               message: "You are not authorized to perform this action.",
-              code: "NOT_ALLOWED_ACCESS",
+              code: err_Code.NOT_ALLOWED_ACCESS,
             },
           ],
         });
@@ -121,7 +121,7 @@ exports.deleteMember = async (req, res, next) => {
           errors: [
             {
               message: "You are not authorized to perform this action.",
-              code: "NOT_ALLOWED_ACCESS",
+              code: err_Code.NOT_ALLOWED_ACCESS,
             },
           ],
         });

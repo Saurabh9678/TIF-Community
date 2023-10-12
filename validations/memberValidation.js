@@ -2,6 +2,8 @@ const { body, param } = require("express-validator");
 const Role = require("../models/roleModel");
 const Community = require("../models/communityModel");
 const User = require("../models/userModel");
+const {err_Code} = require("../utils/constants")
+
 
 exports.ValidateMember = (reqType) => {
   switch (reqType) {
@@ -12,7 +14,7 @@ exports.ValidateMember = (reqType) => {
             if (!community) {
               return Promise.reject({
                 message: "Community not found.",
-                code: "RESOURCE_NOT_FOUND",
+                code: err_Code.RESOURCE_NOT_FOUND,
               });
             }
           });
@@ -22,7 +24,7 @@ exports.ValidateMember = (reqType) => {
             if (!user) {
               return Promise.reject({
                 message: "User not found.",
-                code: "RESOURCE_NOT_FOUND",
+                code: err_Code.RESOURCE_NOT_FOUND,
               });
             }
           });
@@ -32,7 +34,7 @@ exports.ValidateMember = (reqType) => {
             if (!role) {
               return Promise.reject({
                 message: "Role not found.",
-                code: "RESOURCE_NOT_FOUND",
+                code: err_Code.RESOURCE_NOT_FOUND,
               });
             }
           });
@@ -46,7 +48,7 @@ exports.ValidateMember = (reqType) => {
             if (!user) {
               return Promise.reject({
                 message: "User not found.",
-                code: "RESOURCE_NOT_FOUND",
+                code: err_Code.RESOURCE_NOT_FOUND,
               });
             }
           });
@@ -56,7 +58,7 @@ exports.ValidateMember = (reqType) => {
             if (!community) {
               return Promise.reject({
                 message: "Community not found.",
-                code: "RESOURCE_NOT_FOUND",
+                code: err_Code.RESOURCE_NOT_FOUND,
               });
             }
           });

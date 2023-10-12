@@ -38,7 +38,7 @@ exports.loginUser = async (req, res, next) => {
           {
             param: "email",
             message: "The credentials you provided are invalid.",
-            code: "INVALID_CREDENTIALS",
+            code: err_Code.INVALID_CREDENTIALS,
           },
         ],
       });
@@ -53,7 +53,7 @@ exports.loginUser = async (req, res, next) => {
           {
             param: "password",
             message: "The credentials you provided are invalid.",
-            code: "INVALID_CREDENTIALS",
+            code: err_Code.INVALID_CREDENTIALS,
           },
         ],
       });

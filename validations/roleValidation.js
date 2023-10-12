@@ -1,5 +1,7 @@
 const { body } = require("express-validator");
 const Role = require("../models/roleModel")
+const {err_Code} = require("../utils/constants")
+
 
 exports.ValidateRole = (reqType) => {
   switch (reqType) {
@@ -9,7 +11,7 @@ exports.ValidateRole = (reqType) => {
           .isLength({ min: 2 })
           .withMessage({
             message: "Name must be at least 2 characters long",
-            code: "INVALID_INPUT",
+            code: err_Code.INVALID_INPUT,
           })
           .bail()
           .custom(async (value) => {
@@ -17,7 +19,7 @@ exports.ValidateRole = (reqType) => {
               if (role) {
                 return Promise.reject({
                   message: "Role already exists.",
-                  code: "RESOURCE_EXISTS",
+                  code: err_Code.RESOURCE_EXISTS,
                 });
               }
             });
