@@ -2,7 +2,7 @@ const ErrorHandler = require("../utils/errorhandler");
 const { Snowflake } = require("@theinternetfolks/snowflake");
 const User = require("../models/userModel");
 const sendToken = require("../utils/jwtToken");
-
+const {err_Code} = require("../utils/constants")
 // Register a User
 exports.registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
