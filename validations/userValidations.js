@@ -38,16 +38,16 @@ exports.ValidateUser = (reqType) => {
             });
           }),
         body("password")
-          .isLength({ min: 2 })
+          .isLength({ min: 6 })
           .withMessage({
-            message: "Password should be at least 2 characters.",
+            message: "Password should be at least 6 characters.",
             code: err_Code.INVALID_INPUT,
           })
           .bail()
           .custom((value) => {
             if (!/[a-z]/.test(value) || !/[A-Z]/.test(value)) {
               return Promise.reject({
-                message: "Password should be at least 2 characters.",
+                message: "Password should contain lower and uppercase characters.",
                 code: err_Code.INVALID_INPUT,
               });
             }
